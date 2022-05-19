@@ -41,8 +41,8 @@ void DependencieInjection(WebApplicationBuilder builder)
 {
     #region Databases
 
-    builder.Services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("Database"));
-    // builder.Services.AddDbContext<TodoContext>(opt => opt.UseSqlServer("ConnectionString"));
+    //builder.Services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("Database"));
+    builder.Services.AddDbContext<TodoContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     #endregion
 
