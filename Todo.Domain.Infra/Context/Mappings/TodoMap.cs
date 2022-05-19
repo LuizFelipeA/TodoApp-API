@@ -12,12 +12,10 @@ public class TodoMap : IEntityTypeConfiguration<TodoItem>
         builder.ToTable("Todo");
 
         // Primary Key
-        builder.HasKey(x => x.Id);
+        //builder.HasKey(x => x.Id);
 
-        // Identity
-        builder.Property(x => x.Id)
-            .ValueGeneratedOnAdd()
-            .UseIdentityColumn();
+        //// Identity
+        builder.Property(x => x.Id);
 
         // Properties
         builder.Property(x => x.User)
