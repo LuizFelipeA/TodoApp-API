@@ -10,7 +10,10 @@ namespace Todo.Domain.Handlers;
 
 public class TodoHandler :
         Notifiable<Notification>,
-        IHandler<CreateTodoCommand>
+        IHandler<CreateTodoCommand>,
+        IHandler<UpdateTodoCommand>,
+        IHandler<MarkTodoAsDoneCommand>,
+        IHandler<MarkTodoAsUndoneCommand>
 {
     private readonly ITodoRepository _todoRepository;
 
@@ -41,6 +44,69 @@ public class TodoHandler :
             message: "Task saved!",
             data: todoItem);
 
+    }
+
+    public ICommandResult Handle(UpdateTodoCommand command)
+    {
+        command.Validade();
+        if(!command.IsValid)
+            return new GenericCommandResult(
+                false,
+                "Ops, looks like your task is incorrect!",
+                command.Notifications);
+
+        var todoItem = _todoRepository.GetById(command.Id, command.User);
+
+        todoItem.UpdateTitle(command.Title);
+
+        _todoRepository.Update(todoItem);
+
+        return new GenericCommandResult(
+            success: true,
+            message: "Task updated!",
+            data: todoItem);
+    }
+
+    public ICommandResult Handle(MarkTodoAsDoneCommand command)
+    {
+        command.Validade();
+        if (!command.IsValid)
+            return new GenericCommandResult(
+                false,
+                "Ops, looks like your task is incorrect!",
+                command.Notifications);
+
+        var todoItem = _todoRepository.GetById(command.Id, command.User);
+
+        todoItem.MarkAsDone();
+
+        _todoRepository.Update(todoItem);
+
+        return new GenericCommandResult(
+            success: true,
+            message: "Task saved!",
+            data: todoItem);
+    }
+
+    public ICommandResult Handle(MarkTodoAsUndoneCommand command)
+    {
+        command.Validade();
+        if (!command.IsValid)
+            return new GenericCommandResult(
+                false,
+                "Ops, looks like your task is incorrect!",
+                command.Notifications);
+
+        var todoItem = _todoRepository.GetById(command.Id, command.User);
+
+        todoItem.MarkAsUndone();
+
+        _todoRepository.Update(todoItem);
+
+        return new GenericCommandResult(
+            success: true,
+            message: "Task saved!",
+            data: todoItem);
     }
 }
 

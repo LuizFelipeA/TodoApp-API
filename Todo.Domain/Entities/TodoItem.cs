@@ -25,6 +25,11 @@ public class TodoItem : Entity
 
     public void MarkAsDone()
     {
+        Done = true;
+    }
+
+    public void MarkAsUndone()
+    {
         Done = false;
     }
 
