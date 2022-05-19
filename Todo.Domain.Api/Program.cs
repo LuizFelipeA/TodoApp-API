@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Todo.Domain.Handlers;
 using Todo.Domain.Infra.Context;
 using Todo.Domain.Infra.Repositories;
@@ -9,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 DependencieInjection(builder);
+FirebaseAuthentication(builder);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -58,5 +61,22 @@ void DependencieInjection(WebApplicationBuilder builder)
     builder.Services.AddTransient<TodoHandler>();
 
     #endregion
+}
 
+void FirebaseAuthentication(WebApplicationBuilder builder)
+{
+    builder.Services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.Authority = "https://securetoken.google.com/test-proj-5face";
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = "https://securetoken.google.com/test-proj-5face",
+                ValidateAudience = true,
+                ValidAudience = "test-proj-5face",
+                ValidateLifetime = true
+            };
+        });
 }

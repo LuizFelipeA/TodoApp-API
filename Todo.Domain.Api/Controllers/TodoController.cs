@@ -26,22 +26,41 @@ public class TodoController : ControllerBase
     [HttpGet]
     [Route("todos")]
     public IEnumerable<TodoItem> GetAll()
-        => _repository.GetAll("Luiz Felipe LP LP");
+    {
+        var user = User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value;
+
+        return _repository.GetAll(user);
+    }
 
     [HttpGet]
     [Route("done")]
     public IEnumerable<TodoItem> GetAllDone()
-        => _repository.GetAllDone("Luiz Felipe LP LP");
+    {
+        var user = User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value;
+
+        return _repository.GetAllDone(user);
+    }
+        
 
     [HttpGet]
     [Route("undone")]
     public IEnumerable<TodoItem> GetAllUndone()
-        => _repository.GetAllUndone("Luiz Felipe LP LP");
+    {
+        var user = User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value;
+
+        return _repository.GetAllUndone(user);
+    }
+    
 
     [HttpGet]
-    [Route("undone")]
-    public IEnumerable<TodoItem> GetByPeriod() 
-        => _repository.GetByPeriod("Luiz Felipe LP LP", DateTime.Now.Date, true);
+    [Route("period")]
+    public IEnumerable<TodoItem> GetByPeriod()
+    {
+        var user = User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value;
+
+        return _repository.GetByPeriod(user, DateTime.Now.Date, true);
+    }
+    
 
     [HttpPost]
     [Route("create-todo")]
